@@ -1,21 +1,18 @@
 version: '3.8'
 services:
-  backend:
-    container_name: backend
-    build:
-      context: .
-      dockerfile: backend.dockerfile
-    stdin_open: true
+  go:
+    container_name: go
+    build: ./docker/go
     tty: true
     ports:
-      - 8080:8080
+        - "8080:8080"
     depends_on:
-      - db
+        - db
     volumes:
-      - ./backend/go.mod:/app/backend/go.mod
-      - ./backend/go.sum:/app/backend/go.sum
+        - ./backend/app:/go/src/app
+    command: sh -c 'go mod tidy && GO_ENV=dev air && GO_ENV=dev go run main.go'
     networks:
-      - lesson
+        - golang_network
   db:
     image: postgres:15.1-alpine
     ports:
@@ -26,6 +23,8 @@ services:
       POSTGRES_DB: postgres
     restart: always
     networks:
-      - lesson
+      - golang_network
+
 networks:
-  lesson:
+    golang_network:
+        external: true
