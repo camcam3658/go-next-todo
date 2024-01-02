@@ -1,15 +1,16 @@
 import { Outlet } from '@remix-run/react'
 import { FC } from 'react'
-import styles from '../styles/layout.module.css'
-import Header from '../components/Header'
 import { ActionFunction, json } from '@remix-run/node'
 import { createTodo } from '../../model/todo.server'
 
 export const action: ActionFunction = async ({ request }: { request: Request }) => {
-    const todoId = await createTodo(request);
-    console.log(todoId);
-    
-    return json({ message: 'success' });
+    const res = await createTodo(request);
+    if (res) {
+        console.log(res);
+        return json({ message: 'success' }, { status: 201, headers: { Location: '/todo' } });
+    } else {
+        return json({ message: 'failure' }, { status: 500, headers: { Location: '/' } });
+    }
 }
 
 const TodoLayout: FC = () => {
