@@ -1,5 +1,5 @@
 export async function login(request: Request) {
-    const apiUrl = "http://127.0.0.1:8080/login";
+    const apiUrl = "http://localhost:8080/login";
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
@@ -11,11 +11,17 @@ export async function login(request: Request) {
         },
         body: body,
     });
-    return res;
+    if (res.ok) {
+        const token = await res.text(); // 成功時はTextで取得
+        return { success: true, token };
+    } else {
+        const errorResponse = await res.json(); // 失敗時はJSONで取得
+        return { success: false, error: errorResponse };
+    }
 }
 
 export async function register(request: Request) {
-    const apiUrl = "http://127.0.0.1:8080/signup";
+    const apiUrl = "http://localhost:8080/signup";
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
@@ -31,7 +37,7 @@ export async function register(request: Request) {
 }
 
 export async function logout() {
-    const apiUrl = "http://127.0.0.1:8080/logout";
+    const apiUrl = "http://localhost:8080/logout";
     const res = await fetch(apiUrl, {
         method: "POST",
         headers: {

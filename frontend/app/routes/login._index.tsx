@@ -11,10 +11,13 @@ export const meta: MetaFunction = () => {
 };
 
 export async function action({ request }: ActionFunctionArgs) {
-    const res = await login(request);
-    if (res.status == 200) {
+    const loginResult = await login(request);
+    console.log(loginResult);
+    if (loginResult.success) {
+        // ログイン成功時
         return redirect("/");
     } else {
+        // ログイン失敗時
         return redirect("/login");
     }
 }
