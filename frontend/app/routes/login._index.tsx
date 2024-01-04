@@ -1,5 +1,6 @@
-import type { MetaFunction, ActionFunctionArgs } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import type { MetaFunction, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/server-runtime";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
 import { cva } from "../../styled-system/css";
@@ -12,14 +13,19 @@ export const meta: MetaFunction = () => {
 
 export async function action({ request }: ActionFunctionArgs) {
     const loginResult = await login(request);
-    console.log(loginResult);
     if (loginResult.success) {
         // ログイン成功時
         return redirect("/");
     } else {
         // ログイン失敗時
+        const error: string = loginResult.error;
         return redirect("/login");
     }
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+    const res = request;
+    return json({ res });
 }
 
 const loginInput = cva({
@@ -39,6 +45,8 @@ const loginInput = cva({
 });
 
 export default function Login() {
+    const { errorMessage } = useLoaderData<typeof loader>();
+    console.log(errorMessage);
     return (
         <LoginBox>
             <Form action="/login" method="post">
