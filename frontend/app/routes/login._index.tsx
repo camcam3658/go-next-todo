@@ -30,7 +30,6 @@ const loginInput = cva({
         display: "block",
         marginBottom: "2em",
         padding: "0.5em 0",
-        border: "none",
         borderBottom: "1px solid #eaeaea",
         paddingBottom: "1.25em",
         _focus: {
