@@ -12,8 +12,8 @@ export async function login(request: Request) {
         body: body,
     });
     if (res.ok) {
-        const token = await res.text(); // 成功時はTextで取得
-        return { success: true, token };
+        const setCookie = res.headers.get("set-cookie");
+        return { success: true, setCookie };
     } else {
         const errorResponse = await res.json(); // 失敗時はJSONで取得
         return { success: false, error: errorResponse };
@@ -44,5 +44,11 @@ export async function logout() {
             "Content-Type": "application/json",
         },
     });
-    return res;
+    if (res.ok) {
+        const setCookie = res.headers.get("set-cookie");
+        return { success: true, setCookie };
+    } else {
+        const errorResponse = await res.json(); // 失敗時はJSONで取得
+        return { success: false, error: errorResponse };
+    }
 }

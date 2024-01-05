@@ -1,9 +1,8 @@
 import type { MetaFunction, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/server-runtime";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
-import { cva } from "../../styled-system/css";
+import { cva, css } from "../../styled-system/css";
 import { login } from "../../model/user.server";
 import { redirect } from "@remix-run/node";
 
@@ -11,21 +10,30 @@ export const meta: MetaFunction = () => {
     return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
 };
 
-export async function action({ request }: ActionFunctionArgs) {
-    const loginResult = await login(request);
-    if (loginResult.success) {
-        // ログイン成功時
+export async function loader({ request }: LoaderFunctionArgs) {
+    if (request.headers.get("Cookie")) {
         return redirect("/");
     } else {
-        // ログイン失敗時
-        const error: string = loginResult.error;
-        return redirect("/login");
+        return true;
     }
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-    const res = request;
-    return json({ res });
+export async function action({ request }: ActionFunctionArgs) {
+    await new Promise((res) => setTimeout(res, 250));
+    const loginResult = await login(request);
+    if (loginResult.success) {
+        // ログイン成功時
+        return redirect("/", {
+            headers: {
+                "Set-Cookie": loginResult.setCookie || "",
+            },
+        });
+    } else {
+        // ログイン失敗時
+        const error: string = loginResult.error;
+        console.log(error);
+        return error;
+    }
 }
 
 const loginInput = cva({
@@ -45,13 +53,15 @@ const loginInput = cva({
 });
 
 export default function Login() {
-    const { errorMessage } = useLoaderData<typeof loader>();
-    console.log(errorMessage);
+    const actionData = useActionData();
     return (
         <LoginBox>
             <Form action="/login" method="post">
                 <input type="text" name="email" placeholder="メールアドレス" className={loginInput()} />
                 <input type="password" name="password" placeholder="パスワード" className={loginInput()} />
+                <p id="error-message" className={css({ color: "red" })}>
+                    {actionData ? actionData : <>&nbsp;</>}
+                </p>
                 <Button text={"ログイン"} />
             </Form>
             <Link to="/register">会員登録</Link>

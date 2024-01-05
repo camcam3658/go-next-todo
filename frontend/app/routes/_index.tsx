@@ -7,13 +7,27 @@ export const meta: MetaFunction = () => {
     return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
 };
 
-export async function action({}: ActionFunctionArgs) {
-    const res = await logout();
-    console.log(res);
-    if (res.status == 200) {
+export async function loader({ request }: LoaderFunctionArgs) {
+    if (!request.headers.get("Cookie")) {
         return redirect("/login");
     } else {
-        return redirect("/");
+        return true;
+    }
+}
+
+export async function action({}: ActionFunctionArgs) {
+    const logoutResult = await logout();
+    if (logoutResult.success) {
+        // ログアウト成功時
+        return redirect("/login", {
+            headers: {
+                "Set-Cookie": logoutResult.setCookie || "",
+            },
+        });
+    } else {
+        // ログイン失敗時
+        const error: string = logoutResult.error;
+        return error;
     }
 }
 

@@ -54,7 +54,7 @@ func (uc *userController) LogIn(c echo.Context) error {
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	// cookie.Secure = true
 	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
+	cookie.SameSite = http.SameSiteLaxMode
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }
@@ -68,7 +68,7 @@ func (uc *userController) LogOut(c echo.Context) error {
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	// cookie.Secure = true
 	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
+	cookie.SameSite = http.SameSiteLaxMode
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }
