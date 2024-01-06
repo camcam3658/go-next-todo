@@ -11,11 +11,21 @@ export const meta: MetaFunction = () => {
 };
 
 export async function action({ request }: ActionFunctionArgs) {
-    const res = await register(request);
-    if (res.status == 200) {
-        return redirect("/");
+    const ResisterResult = await register(request);
+    if (ResisterResult.success) {
+        // 会員登録成功時
+        // バックエンド側でクッキーをセットし、会員登録が済めばログイン状態になるようにする
+        return redirect("/login", {
+            // headers: {
+            //     "Set-Cookie": ResisterResult.setCookie || "",
+            // },
+        });
     } else {
-        return redirect("/login");
+        // 会員登録失敗時
+        // TODO エラーメッセージを最適化
+        const error: string = ResisterResult.error;
+        console.log(error);
+        return error;
     }
 }
 

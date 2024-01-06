@@ -33,7 +33,12 @@ export async function register(request: Request) {
         },
         body: body,
     });
-    return res;
+    if (res.ok) {
+        return { success: true };
+    } else {
+        const errorResponse = await res.json(); // 失敗時はJSONで取得
+        return { success: false, error: errorResponse };
+    }
 }
 
 export async function logout() {

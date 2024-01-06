@@ -1,4 +1,4 @@
-import type { MetaFunction, ActionFunctionArgs } from "@remix-run/node";
+import type { MetaFunction, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { logout } from "../../model/user.server";
 import { redirect } from "@remix-run/node";
@@ -15,7 +15,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 }
 
-export async function action({}: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
     const logoutResult = await logout();
     if (logoutResult.success) {
         // ログアウト成功時

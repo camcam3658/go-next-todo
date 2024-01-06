@@ -30,6 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
         });
     } else {
         // ログイン失敗時
+        // TODO エラーメッセージを最適化
         const error: string = loginResult.error;
         console.log(error);
         return error;
