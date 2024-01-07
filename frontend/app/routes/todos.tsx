@@ -2,6 +2,7 @@ import { Outlet, useActionData } from "@remix-run/react";
 import { FC } from "react";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { createTodo, deleteTodo } from "../../model/todo.server";
+import { cva, css } from "../../styled-system/css";
 
 export async function action({ request }: ActionFunctionArgs) {
     const cookie = request.headers.get("Cookie");
@@ -33,11 +34,22 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 }
 
+const content = cva({
+    base: {
+        position: "relative",
+        bg: "#ffffff",
+        padding: "45px",
+        textAlign: "center",
+        maxWidth: "360px",
+        margin: "0 auto",
+    },
+});
+
 const TodoLayout: FC = () => {
     const actionData = useActionData();
     return (
-        <div>
-            <div>
+        <div className={css({ margin: "auto", height: "100vh" })}>
+            <div className={content()}>
                 <Outlet context={actionData} />
             </div>
         </div>

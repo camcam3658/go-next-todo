@@ -1,8 +1,8 @@
 import type { MetaFunction, ActionFunctionArgs } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
-import { cva } from "../../styled-system/css";
+import { cva, css } from "../../styled-system/css";
 import { register } from "../../model/user.server";
 import { redirect } from "@remix-run/node";
 
@@ -37,7 +37,6 @@ const loginInput = cva({
         display: "block",
         marginBottom: "2em",
         padding: "0.5em 0",
-        border: "none",
         borderBottom: "1px solid #eaeaea",
         paddingBottom: "1.25em",
         _focus: {
@@ -47,14 +46,22 @@ const loginInput = cva({
 });
 
 export default function Register() {
+    const actionData = useActionData();
     return (
         <LoginBox>
             <Form action="/register" method="post">
                 <input type="text" name="email" placeholder="メールアドレス" className={loginInput()} />
                 <input type="password" name="password" placeholder="パスワード" className={loginInput()} />
+                {actionData && (
+                    <p id="error-message" className={css({ color: "red" })}>
+                        {actionData}
+                    </p>
+                )}
                 <Button text={"新規登録"} />
             </Form>
-            <Link to="/login">ログイン画面はこちら</Link>
+            <Link className={css({ textDecoration: "none", color: "#2196f3", fontWeight: "bold" })} to="/login">
+                ログイン画面はこちら
+            </Link>
         </LoginBox>
     );
 }

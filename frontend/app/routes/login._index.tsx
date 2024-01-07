@@ -60,12 +60,16 @@ export default function Login() {
             <Form action="/login" method="post">
                 <input type="text" name="email" placeholder="メールアドレス" className={loginInput()} />
                 <input type="password" name="password" placeholder="パスワード" className={loginInput()} />
-                <p id="error-message" className={css({ color: "red" })}>
-                    {actionData ? actionData : <>&nbsp;</>}
-                </p>
+                {actionData && (
+                    <p id="error-message" className={css({ color: "red" })}>
+                        {actionData}
+                    </p>
+                )}
                 <Button text={"ログイン"} />
             </Form>
-            <Link to="/register">会員登録</Link>
+            <Link className={css({ textDecoration: "none", color: "#2196f3", fontWeight: "bold" })} to="/register">
+                会員登録はこちら
+            </Link>
         </LoginBox>
     );
 }
