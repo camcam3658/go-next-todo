@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
     if (request.headers.get("Cookie")) {
-        return redirect("/");
+        return redirect("/todos");
     } else {
         return true;
     }
@@ -23,7 +23,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const loginResult = await login(request);
     if (loginResult.success) {
         // ログイン成功時
-        return redirect("/", {
+        return redirect("/todos", {
             headers: {
                 "Set-Cookie": loginResult.setCookie || "",
             },

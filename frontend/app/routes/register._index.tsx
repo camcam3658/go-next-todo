@@ -1,4 +1,4 @@
-import type { MetaFunction, ActionFunctionArgs } from "@remix-run/node";
+import type { MetaFunction, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
@@ -9,6 +9,14 @@ import { redirect } from "@remix-run/node";
 export const meta: MetaFunction = () => {
     return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
 };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+    if (request.headers.get("Cookie")) {
+        return redirect("/todos");
+    } else {
+        return true;
+    }
+}
 
 export async function action({ request }: ActionFunctionArgs) {
     const ResisterResult = await register(request);

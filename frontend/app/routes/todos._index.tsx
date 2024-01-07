@@ -41,7 +41,6 @@ export default function Todos() {
     return (
         <>
             <Form action="/todos" method="post">
-                <p>ログイン</p>
                 <div className={css({ display: "flex" })}>
                     <input type="text" name="title" placeholder="タスクを追加する" className={loginInput()} />
                     <button type="submit" name="action" value="create" className={css({ cursor: "pointer" })}>
