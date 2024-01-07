@@ -47,14 +47,21 @@ export default function Todos() {
                 <p id="error-message" className={css({ color: "red" })}>
                     {actionData ? actionData : <>&nbsp;</>}
                 </p>
-                <Button text={"ログイン"} />
+                <button type="submit" name="action" value="create">
+                    追加
+                </button>
             </Form>
             <ul>
                 {data.map((row) => (
-                    <li key={row.id}>
-                        <span>{row.id}</span>
-                        <span>{row.title}</span>
-                    </li>
+                    <>
+                        <li key={row.id}>{row.title}</li>
+                        <Form action="/todos" method="delete">
+                            <input type="hidden" name="id" value={row.id} />
+                            <button type="submit" name="action" value="delete">
+                                削除
+                            </button>
+                        </Form>
+                    </>
                 ))}
             </ul>
         </>
