@@ -1,6 +1,6 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, useActionData } from "@remix-run/react";
 import { FC } from "react";
-import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs } from "@remix-run/node";
 import { createTodo, deleteTodo } from "../../model/todo.server";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -15,8 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
             } else {
                 // タスク登録失敗時
                 // TODO エラーメッセージを最適化
-                const error: string = createResult.error;
-                return error;
+                return createResult;
             }
         }
 
@@ -28,18 +27,18 @@ export async function action({ request }: ActionFunctionArgs) {
             } else {
                 // タスク登録失敗時
                 // TODO エラーメッセージを最適化
-                const error: string = dereteResult.error;
-                return error;
+                return dereteResult;
             }
         }
     }
 }
 
 const TodoLayout: FC = () => {
+    const actionData = useActionData();
     return (
         <div>
             <div>
-                <Outlet />
+                <Outlet context={actionData} />
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import type { MetaFunction, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, Link, useOutletContext, useLoaderData } from "@remix-run/react";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
 import { cva, css } from "../../styled-system/css";
@@ -39,13 +39,13 @@ const loginInput = cva({
 
 export default function Todos() {
     const data = useLoaderData<typeof loader>();
-    const actionData = useActionData();
+    const actionData = useOutletContext();
     return (
         <>
             <Form action="/todos" method="post">
                 <input type="text" name="title" placeholder="タスクを追加する" className={loginInput()} />
                 <p id="error-message" className={css({ color: "red" })}>
-                    {actionData ? actionData : <>&nbsp;</>}
+                    {actionData?.action === "create" ? actionData.error : <>&nbsp;</>}
                 </p>
                 <button type="submit" name="action" value="create">
                     追加
@@ -64,6 +64,9 @@ export default function Todos() {
                     </>
                 ))}
             </ul>
+            <p id="error-message" className={css({ color: "red" })}>
+                {actionData?.action === "delete" ? actionData.error : <>&nbsp;</>}
+            </p>
         </>
     );
 }

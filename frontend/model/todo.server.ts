@@ -29,7 +29,7 @@ export async function createTodo(formData: FormData, cookie: string) {
         return { success: true };
     } else {
         const errorResponse = await res.json(); // 失敗時はJSONで取得
-        return { success: false, error: errorResponse };
+        return { success: false, action: "create", error: errorResponse };
     }
 }
 
@@ -44,11 +44,10 @@ export async function deleteTodo(formData: FormData, cookie: string) {
             Cookie: cookie,
         },
     });
-    console.log(res);
     if (res.ok) {
         return { success: true };
     } else {
         const errorResponse = await res.json(); // 失敗時はJSONで取得
-        return { success: false, error: errorResponse };
+        return { success: false, action: "delete", error: errorResponse };
     }
 }
